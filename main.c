@@ -7,10 +7,11 @@
 
 // Cores para os textos
 #define VERMELHO "\033[31m"
+#define AMARELO  "\033[33m"
 #define VERDE    "\033[32m"
 #define AZUL     "\033[34m"
-#define BRANCO     "\033[37m"
-#define NEGRITO  "\033[1;37"
+#define BRANCO   "\033[37m"
+#define NEGRITO  "\033[1;37m"
 #define RESET    "\033[0m"
 
 void limpar_buffer(){
@@ -23,9 +24,13 @@ void pausar(){
     limpar_buffer();
 }
 
+/*
+    Fiz essa função para impedir, o usúario chamar uma função, sem ter criado
+    um conjunto, o que acha?
+*/
 int existe_conjunto(int contador){
     if(contador == 0){
-        printf(VERMELHO " Você precisa criar um novo conjunto!" RESET "\n");
+        printf(VERMELHO "\nVocê precisa criar um novo conjunto!" RESET "\n");
         return false;
     }
 
@@ -36,9 +41,9 @@ int existe_conjunto(int contador){
 void criar_conjunto(int *contador){
     if(*contador < M){
         (*contador)++;
-        printf(VERDE " Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", *contador);
+        printf(VERDE "Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", *contador);
     }else{
-        printf(VERMELHO " Limite de %d conjuntos atingido." RESET "\n", M);
+        printf(VERMELHO "Limite de %d conjuntos atingido." RESET "\n", M);
     }
 }
 
@@ -46,7 +51,6 @@ void criar_conjunto(int *contador){
 void inserir_valores(int contador, int matriz[M][N], int conjunto){
     if(conjunto >= contador){
         printf(VERMELHO "ERRO: Conjunto nao existente!\n" RESET);
-        pausar();
         return;
     }
 
@@ -68,7 +72,7 @@ void inserir_valores(int contador, int matriz[M][N], int conjunto){
 
 // 6.
 void mostrar_conjunto(int contador, int MATRIZ[M][N]){
-    
+
 }
 
 int main(){
@@ -101,7 +105,7 @@ int main(){
             erro = false;
         }
 
-        printf("\n " AZUL "Escolha a sua opção: " RESET);
+        printf("\n" AZUL "Escolha a sua opção: " RESET);
 
         if(scanf("%d", &opcao) != 1){
             opcao = -1;

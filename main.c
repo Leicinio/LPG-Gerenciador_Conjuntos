@@ -41,9 +41,9 @@ int existe_conjunto(int contador){
 void criar_conjunto(int *contador){
     if(*contador < M){
         (*contador)++;
-        printf(VERDE "Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", *contador);
+        printf("\n" VERDE "Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", *contador);
     }else{
-        printf(VERMELHO "Limite de %d conjuntos atingido." RESET "\n", M);
+        printf("\n" VERMELHO "Limite de %d conjuntos atingido." RESET "\n", M);
     }
 }
 
@@ -133,6 +133,7 @@ int main(){
                 pausar();
                 break;
             case 10:
+                printf("\n" NEGRITO "Obrigado por usar o sistema! Volte sempre." RESET "\n");
                 return 0;
             default:
                 erro = true;

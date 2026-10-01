@@ -23,6 +23,10 @@ int criar_conjunto(int contador){
     }
 }
 
+void inserir_valores(){
+    
+}
+
 int main(){
     int MATRIZ[M][N] = {{0}};
 

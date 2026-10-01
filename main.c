@@ -14,15 +14,6 @@ void pausar(){
     limpar_buffer();
 }
 
-int criar_conjunto(int contador){
-    if(contador < M){
-        printf("\n\033[32 OI");
-        return contador++;
-    }else{
-
-    }
-}
-
 int main(){
     int MATRIZ[M][N] = {{0}};
 
@@ -55,14 +46,18 @@ int main(){
 
         switch(opcao){
             case 1:
-                criar_conjunto(contador);
-                printf("\n\033[32m %d\033[0m", contador);
+                if(contador < M){
+                    contador++;
+                    printf("\n\033[32mO conjunto foi espandido(%d) \033[0m\n", contador);
+                }else{
+                    printf("\n \033[32m Limite máximo para o conjunto atingindo! \033[0m\n");
+                }
                 pausar();
                 break;
             case 10:
                 return 0;
             default:
-                printf("\nOps! Digite novamente");
+                printf("\n\033[31mOps! Houve um erro de digitação, tente novamente ;)\033[0m\n");
                 pausar();
                 break;
         }

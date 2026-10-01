@@ -23,8 +23,26 @@ int criar_conjunto(int contador){
     }
 }
 
-void inserir_valores(){
-    
+void inserir_valores(int contador, int matriz[M][N], int conjunto){
+    if(conjunto >= contador){
+        printf("ERRO: Conjunto nao existente!");
+        return;
+    }
+
+    int i = 0;
+    while(true){
+        
+        if(i >= N) break;
+        if(matriz[conjunto][i] != 0){
+            //Eh possivel adicionar um numero
+            int entrada;
+            scanf("%d", &entrada);
+            if(entrada == 0) break;
+
+            matriz[conjunto][i] = entrada;
+        }
+        i++;
+    }
 }
 
 int main(){
@@ -62,6 +80,12 @@ int main(){
                 criar_conjunto(contador);
                 printf("\n\033[32m %d\033[0m", contador);
                 pausar();
+                break;
+            case 2:
+                int conjunto;
+                printf("Digite o indice do conjunto voce deseja inserir: ");
+                scanf("%d", &conjunto);
+                inserir_valores(contador, MATRIZ, conjunto);
                 break;
             case 10:
                 return 0;

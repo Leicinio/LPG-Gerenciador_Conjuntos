@@ -66,6 +66,11 @@ void inserir_valores(int contador, int matriz[M][N], int conjunto){
     }
 }
 
+// 6.
+void mostrar_conjunto(int contador, int MATRIZ[M][N]){
+    
+}
+
 int main(){
     int opcao; 
     bool erro = false;
@@ -118,6 +123,10 @@ int main(){
                 pausar();
                 break;
             case 6:
+                if(existe_conjunto(contador)){
+                    mostrar_conjunto(contador, MATRIZ);
+                }
+                pausar();
                 break;
             case 10:
                 return 0;

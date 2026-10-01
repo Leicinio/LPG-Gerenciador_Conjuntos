@@ -23,6 +23,26 @@ void pausar(){
     limpar_buffer();
 }
 
+int existe_conjunto(int contador){
+    if(contador == 0){
+        printf(VERMELHO " Você precisa criar um novo conjunto!" RESET "\n");
+        return false;
+    }
+
+    return true;
+}
+
+// 1.
+void criar_conjunto(int *contador){
+    if(*contador < M){
+        (*contador)++;
+        printf(VERDE " Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", *contador);
+    }else{
+        printf(VERMELHO " Limite de %d conjuntos atingido." RESET "\n", M);
+    }
+}
+
+// 2.
 void inserir_valores(int contador, int matriz[M][N], int conjunto){
     if(conjunto >= contador){
         printf(VERMELHO "ERRO: Conjunto nao existente!\n" RESET);
@@ -57,7 +77,7 @@ int main(){
         printf("\033[H\033[2J"); // Limpar o terminal
 
         printf("╔══════════════════════════════════════════════════╗\n");
-        printf("║              GERENCIADOR DE CONJUNTOS            ║\n");
+        printf("║" NEGRITO "              GERENCIADOR DE CONJUNTOS            ║" RESET "\n");
         printf("╠══════════════════════════════════════════════════╣\n");
         printf("║  1. Criar um novo conjunto vazio                 ║\n");
         printf("║  2. Inserir dados em um conjunto                 ║\n");
@@ -85,19 +105,17 @@ int main(){
 
         switch(opcao){
             case 1:
-                if(contador < M){
-                    contador++;
-                    printf(VERDE " Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", contador);
-                }else{
-                    printf(VERMELHO " Limite de %d conjuntos atingido." RESET "\n", M);
-                }
+                criar_conjunto(&contador);
                 pausar();
                 break;
             case 2:
-                int conjunto;
-                printf("Digite o indice do conjunto voce deseja inserir: ");
-                scanf("%d", &conjunto);
-                inserir_valores(contador, MATRIZ, conjunto);
+                if(existe_conjunto(contador)){
+                    int conjunto;
+                    printf("Digite o indice do conjunto voce deseja inserir: ");
+                    scanf("%d", &conjunto);
+                    inserir_valores(contador, MATRIZ, conjunto);
+                }
+                pausar();
                 break;
             case 6:
                 break;

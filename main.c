@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Tamanho da Matriz
 #define M 5
 #define N 5
+
+// Cores para os textos
+#define VERMELHO "\033[31m"
+#define VERDE    "\033[32m"
+#define AZUL     "\033[34m"
+#define BRANCO     "\033[37m"
+#define NEGRITO  "\033[1;37"
+#define RESET    "\033[0m"
 
 void limpar_buffer(){
     int c;
@@ -10,13 +19,14 @@ void limpar_buffer(){
 }
 
 void pausar(){
-    printf("\n\033[1;37mPressione Enter para continuar...\033[0m");
+    printf("\n" NEGRITO "Pressione Enter para continuar..." RESET);
     limpar_buffer();
 }
 
 void inserir_valores(int contador, int matriz[M][N], int conjunto){
     if(conjunto >= contador){
-        printf("ERRO: Conjunto nao existente!");
+        printf(VERMELHO "ERRO: Conjunto nao existente!\n" RESET);
+        pausar();
         return;
     }
 
@@ -37,9 +47,10 @@ void inserir_valores(int contador, int matriz[M][N], int conjunto){
 }
 
 int main(){
+    int opcao; 
+    bool erro = false;
+    
     int MATRIZ[M][N] = {{0}};
-
-    int opcao;
     int contador = 0;
     
     do{
@@ -59,7 +70,13 @@ int main(){
         printf("║  9. Calcular a média e o desvio padrão           ║\n");
         printf("║ 10. Sair do programa                             ║\n");
         printf("╚══════════════════════════════════════════════════╝\n");
-        printf("Digite uma das opções: ");
+
+        if(erro){
+            printf(VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
+            erro = false;
+        }
+
+        printf("\n " AZUL "Escolha a sua opção: " RESET);
 
         if(scanf("%d", &opcao) != 1){
             opcao = -1;
@@ -70,9 +87,9 @@ int main(){
             case 1:
                 if(contador < M){
                     contador++;
-                    printf("\n\033[32mO conjunto foi espandido(%d) \033[0m\n", contador);
+                    printf(VERDE " Conjunto criado! Agora existem %d conjunto(s)." RESET "\n", contador);
                 }else{
-                    printf("\n \033[32m Limite máximo para o conjunto atingindo! \033[0m\n");
+                    printf(VERMELHO " Limite de %d conjuntos atingido." RESET "\n", M);
                 }
                 pausar();
                 break;
@@ -82,11 +99,12 @@ int main(){
                 scanf("%d", &conjunto);
                 inserir_valores(contador, MATRIZ, conjunto);
                 break;
+            case 6:
+                break;
             case 10:
                 return 0;
             default:
-                printf("\n\033[31mOps! Houve um erro de digitação, tente novamente ;)\033[0m\n");
-                pausar();
+                erro = true;
                 break;
         }
 

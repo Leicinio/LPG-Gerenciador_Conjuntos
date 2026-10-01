@@ -24,7 +24,7 @@ void inserir_valores(int contador, int matriz[M][N], int conjunto){
     while(true){
         
         if(i >= N) break;
-        if(matriz[conjunto][i] != 0){
+        if(matriz[conjunto][i] == 0){
             //Eh possivel adicionar um numero
             int entrada;
             scanf("%d", &entrada);

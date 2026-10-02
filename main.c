@@ -48,31 +48,55 @@ void criar_conjunto(int *contador){
 }
 
 // 2.
-void inserir_valores(int contador, int matriz[M][N], int conjunto){
-    if(conjunto >= contador){
-        printf(VERMELHO "ERRO: Conjunto nao existente!\n" RESET);
-        return;
-    }
-
-    int i = 0;
-    while(true){
-        
-        if(i >= N) break;
-        if(matriz[conjunto][i] == 0){
-            //Eh possivel adicionar um numero
-            int entrada;
-            scanf("%d", &entrada);
-            if(entrada == 0) break;
-
-            matriz[conjunto][i] = entrada;
+void inserir_valores(int contador, int matriz[][N], int quantidade[]){
+    int indice = 0;
+    int valor;
+    do{
+        printf("Em qual conjunto deseja inserir valores(0 - %d)", contador - 1);
+        if(scanf("%d", &indice) != 1){
+            indice = -1;
         }
-        i++;
+        limpar_buffer();
+        if(indice < 0 || indice >= contador){
+            printf(VERMELHO "Índice inválido!" RESET "\n");
+        }
+    }while(indice < 0 || indice >= contador);
+
+    for(int j = quantidade[indice]; j < N; j++){
+        printf("Digite um valor (0 para parar): ");
+        scanf("%d", &valor);
+
+        if(valor == 0){
+            break;
+        }
+        matriz[indice][j] = valor;
+        quantidade[indice]++;
     }
 }
 
 // 6.
 void mostrar_conjunto(int contador, int MATRIZ[M][N]){
+    int indice = 0;
+    
+    do{
+        printf("Qual o conjunto deseja ver os valores(0 - %d)", contador - 1);
+        if(scanf("%d", &indice) != 1){
+            indice = -1;
+        }
+        limpar_buffer();
+        if(indice < 0 || indice >= contador){
+            printf(VERMELHO "Índice inválido!" RESET "\n");
+        }
+    }while(indice < 0 || indice >= contador);
 
+    printf(" Conjunto %d: {", indice);
+    for(int j = 0; j < quantidade[indice]; j++){
+        if(j > 0){
+            printf(", ");
+        }
+        printf("%d", matriz[indice][j]);
+    }
+    printf("}\n");
 }
 
 int main(){
@@ -80,6 +104,7 @@ int main(){
     bool erro = false;
     
     int MATRIZ[M][N] = {{0}};
+    int quantidade[N] = {0};
     int contador = 0;
     
     do{
@@ -119,16 +144,13 @@ int main(){
                 break;
             case 2:
                 if(existe_conjunto(contador)){
-                    int conjunto;
-                    printf("Digite o indice do conjunto voce deseja inserir: ");
-                    scanf("%d", &conjunto);
-                    inserir_valores(contador, MATRIZ, conjunto);
+                    inserir_valores(contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;
             case 6:
                 if(existe_conjunto(contador)){
-                    mostrar_conjunto(contador, MATRIZ);
+                    mostrar_conjunto(contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

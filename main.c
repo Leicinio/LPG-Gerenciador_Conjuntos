@@ -60,11 +60,17 @@ void inserir_valores(int contador, int matriz[][N], int quantidade[]){
         if(indice < 0 || indice >= contador){
             printf(VERMELHO "Índice inválido!" RESET "\n");
         }
+
     }while(indice < 0 || indice >= contador);
 
     for(int j = quantidade[indice]; j < N; j++){
         printf("Digite um valor (0 para parar): ");
-        scanf("%d", &valor);
+        if(scanf("%d", &valor) != 1){
+            limpar_buffer();
+            printf(VERMELHO "Digite apenas números!" RESET "\n");
+            j--;
+            continue;
+        }
 
         if(valor == 0){
             break;
@@ -75,7 +81,7 @@ void inserir_valores(int contador, int matriz[][N], int quantidade[]){
 }
 
 // 6.
-void mostrar_conjunto(int contador, int MATRIZ[M][N]){
+void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[]){
     int indice = 0;
     
     do{
@@ -89,7 +95,7 @@ void mostrar_conjunto(int contador, int MATRIZ[M][N]){
         }
     }while(indice < 0 || indice >= contador);
 
-    printf(" Conjunto %d: {", indice);
+    printf("Conjunto %d: {", indice);
     for(int j = 0; j < quantidade[indice]; j++){
         if(j > 0){
             printf(", ");

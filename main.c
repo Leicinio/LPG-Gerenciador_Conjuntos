@@ -52,7 +52,7 @@ void inserir_valores(int contador, int matriz[][N], int quantidade[]){
     int indice = 0;
     int valor;
     do{
-        printf("Em qual conjunto deseja inserir valores(0 - %d)", contador - 1);
+        printf("\nEm qual conjunto deseja inserir valores(0 - %d): ", contador - 1);
         if(scanf("%d", &indice) != 1){
             indice = -1;
         }
@@ -63,29 +63,33 @@ void inserir_valores(int contador, int matriz[][N], int quantidade[]){
 
     }while(indice < 0 || indice >= contador);
 
-    for(int j = quantidade[indice]; j < N; j++){
-        printf("Digite um valor (0 para parar): ");
-        if(scanf("%d", &valor) != 1){
-            limpar_buffer();
-            printf(VERMELHO "Digite apenas números!" RESET "\n");
-            j--;
-            continue;
-        }
+    if(quantidade[indice] != N){
+        for(int j = quantidade[indice]; j < M; j++){
+            printf("Digite um valor (0 para parar): ");
+            if(scanf("%d", &valor) != 1){
+                limpar_buffer();
+                printf(VERMELHO "Digite apenas números!" RESET "\n");
+                j--;
+                continue;
+            }
 
-        if(valor == 0){
-            break;
+            if(valor == 0){
+                break;
+            }
+            matriz[indice][j] = valor;
+            quantidade[indice]++;
         }
-        matriz[indice][j] = valor;
-        quantidade[indice]++;
+    }else{
+        printf("\n"VERMELHO "O Conjunto não suporta mais valores" RESET "\n");
     }
 }
 
 // 6.
-void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[]){
+void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[N]){
     int indice = 0;
     
     do{
-        printf("Qual o conjunto deseja ver os valores(0 - %d)", contador - 1);
+        printf("Qual o conjunto deseja ver os valores(0 - %d): ", contador - 1);
         if(scanf("%d", &indice) != 1){
             indice = -1;
         }
@@ -95,7 +99,7 @@ void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[]){
         }
     }while(indice < 0 || indice >= contador);
 
-    printf("Conjunto %d: {", indice);
+    printf("\nConjunto %d: {", indice);
     for(int j = 0; j < quantidade[indice]; j++){
         if(j > 0){
             printf(", ");
@@ -105,17 +109,23 @@ void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[]){
     printf("}\n");
 }
 
+void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[N]){
+
+}
+
 int main(){
+    // Menu
     int opcao; 
     bool erro = false;
     
     int MATRIZ[M][N] = {{0}};
-    int quantidade[N] = {0};
+    int quantidade[M] = {0};
     int contador = 0;
     
     do{
         printf("\033[H\033[2J"); // Limpar o terminal
 
+        printf("\n\n");
         printf("╔══════════════════════════════════════════════════╗\n");
         printf("║" NEGRITO "              GERENCIADOR DE CONJUNTOS            ║" RESET "\n");
         printf("╠══════════════════════════════════════════════════╣\n");
@@ -132,7 +142,7 @@ int main(){
         printf("╚══════════════════════════════════════════════════╝\n");
 
         if(erro){
-            printf(VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
+            printf("\n"VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
             erro = false;
         }
 
@@ -157,6 +167,12 @@ int main(){
             case 6:
                 if(existe_conjunto(contador)){
                     mostrar_conjunto(contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 7:
+                if(existe_conjunto(contador)){
+                    mostrar_todos_conjuntos(contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

@@ -7,10 +7,9 @@
 
 // Cores para os textos
 #define VERMELHO "\033[31m"
-#define AMARELO  "\033[33m"
 #define VERDE    "\033[32m"
+#define AMARELO  "\033[33m"
 #define AZUL     "\033[34m"
-#define BRANCO   "\033[37m"
 #define NEGRITO  "\033[1;37m"
 #define RESET    "\033[0m"
 

@@ -47,7 +47,7 @@ void criar_conjunto(int *contador){
 }
 
 // 2.
-void inserir_valores(int contador, int matriz[][N], int quantidade[]){
+void inserir_valores(int contador, int matriz[][N], int quantidade[M]){
     int indice = 0;
     int valor;
     do{
@@ -84,7 +84,7 @@ void inserir_valores(int contador, int matriz[][N], int quantidade[]){
 }
 
 // 6.
-void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[N]){
+void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
     int indice = 0;
     
     do{
@@ -108,7 +108,7 @@ void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[N]){
     printf("}\n");
 }
 
-void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[N]){
+void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
 
 }
 

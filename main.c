@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 // Tamanho da Matriz
 #define M 5
 #define N 5
@@ -179,6 +183,11 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
 }
 
 int main(){
+
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+    #endif
+
     // Menu
     int opcao; 
     bool erro = false;

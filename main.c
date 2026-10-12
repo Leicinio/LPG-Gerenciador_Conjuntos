@@ -151,6 +151,28 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
     }
 }
 
+// 3. Remover um conjunto
+void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
+    int indice = pedir_indice_valores(0, *contador, "remover");
+    int conjunto_maximo = *contador - 1;
+
+    for(int i = indice; i < conjunto_maximo; i++){ 
+        for(int j = 0; j < N; j++){
+            matriz[i][j] = matriz[i+1][j];
+        }
+        quantidade[i] = quantidade[i+1];
+    }
+
+
+    for(int i = 0; i < N; i++){
+        matriz[conjunto_maximo][i] = 0;
+    }
+    quantidade[conjunto_maximo] = 0;
+    (*contador)--;
+
+    printf("\n" AMARELO "Conjunto removido! Os conjuntos com indíces maiores foram movidos. Agora existem %d conjunto(s)." RESET "\n", *contador);
+}
+
 // 6. Mostrar o conjunto escolhido pelo usuário
 void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
     int indice = pedir_indice_valores(0, contador, "mostrar");
@@ -256,6 +278,12 @@ int main(){
             case 2:
                 if(existe_conjunto(contador)){
                     inserir_valores(contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 3:
+                if(existe_conjunto(contador)){
+                    remover_conjunto(&contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

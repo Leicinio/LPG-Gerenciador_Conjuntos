@@ -93,6 +93,19 @@ int pedir_indice_valores(int chave, int contador, char *acao){
     }
 }
 
+//Pode ser utilizado no item 8 no futuro.
+//Retorna -1 se não existe no conjunto, retorna o índice se existe no conjunto.
+int existe_valor(int conjunto[], int valor){
+    int indice = -1;
+    for(int i = 0; i < N; i++){
+        if(conjunto[i] == valor){
+            indice = i;
+            break;
+        }
+    }
+    return indice;
+}
+
 // ---------- Opções do menu ----------
 
 // 1. Cria um novo conjunto para ser usado dentro da matriz
@@ -123,6 +136,13 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
             if(valor == 0){
                 break;
             }
+
+            if(existe_valor(matriz[indice], valor) != -1){
+                printf("\n"VERMELHO "Esse valor já existe nesse conjunto" RESET "\n");
+                j--;
+                continue;
+            }
+
             matriz[indice][j] = valor;
             quantidade[indice]++;
         }
@@ -184,6 +204,7 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
 
 int main(){
 
+    //Compatibilidade dos caracteres especiais
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
     #endif

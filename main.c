@@ -175,8 +175,8 @@ void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
 
 // 4. União de Conjuntos
 void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
-    if(*contador < 2){
-        printf("\n" VERMELHO "Você precisa de no mínimo 2 conjuntos criados.\n");
+    if(*contador < 1){
+        printf("\n" VERMELHO "Você precisa de no mínimo 1 conjunto criado.\n");
         return;
     }
     if(*contador >= M){
@@ -232,6 +232,47 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     printf("\n" VERDE "O conjunto união foi criado no índice %d.\n", (*contador - 1));
 
 
+}
+
+
+// 5. Interseção de conjuntos
+void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
+    if(*contador < 1){
+        printf("\n" VERMELHO "Você precisa de no mínimo 1 conjunto criado.\n");
+        return;
+    }
+    if(*contador >= M){
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        return;
+    }
+
+    int indice = pedir_indice_valores(0, *contador, "unir primeiro");
+    int indice2 = pedir_indice_valores(0, *contador, "unir segundo");
+
+    int k = 0;
+
+    for(int i = 0; i < N; i++){
+        int valor1 = matriz[indice][i];
+        if(valor1 == 0 && k >= N){
+            break;
+        }
+
+        for(int j = 0; j < N; j++){
+            int valor2 = matriz[indice2][j];
+            if(valor2 == 0){
+                break;
+            }
+
+            if(valor1 == valor2){
+                matriz[*contador][k] = valor1;
+                quantidade[*contador]++;
+                k++;
+            }
+        }
+    }
+
+    (*contador)++;
+    printf("\n" VERDE "O conjunto interseção foi criado no índice %d.\n", (*contador - 1));
 }
 
 // 6. Mostrar o conjunto escolhido pelo usuário
@@ -351,6 +392,12 @@ int main(){
             case 4:
                 if(existe_conjunto(contador)){
                     uniao_conjuntos(&contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 5:
+                if(existe_conjunto(contador)){
+                    intersecao_conjuntos(&contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

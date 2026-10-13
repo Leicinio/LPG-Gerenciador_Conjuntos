@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 // Tamanho da Matriz
-#define M 5
-#define N 5
+#define M 8 // Conjuntos 
+#define N 10 // Elementos
+#define P 2 
 
 // Redefinir todas as formatações de texto
 #define RESET    "\033[0m"
@@ -118,13 +120,13 @@ void criar_conjunto(int *contador){
     }
 }
 
-// 2. Inserir valores dentro de um indice da matriz escolhido pelo usuário
+// 2. Inserir valores 
 void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
     int indice = pedir_indice_valores(0, contador, "inserir valores");
     int valor;
 
     if(quantidade[indice] != N){
-        for(int j = quantidade[indice]; j < M; j++){
+        for(int j = quantidade[indice]; j < N; j++){
             printf("Digite um valor (0 para parar): ");
             if(scanf("%d", &valor) != 1){
                 limpar_buffer();
@@ -275,7 +277,7 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     printf("\n" VERDE "O conjunto interseção foi criado no índice %d.\n", (*contador - 1));
 }
 
-// 6. Mostrar o conjunto escolhido pelo usuário
+// 6. Mostrar um conjunto 
 void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
     int indice = pedir_indice_valores(0, contador, "mostrar");
 
@@ -289,7 +291,7 @@ void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
     printf("}\n");
 }
 
-// 7. Mostrar todos os conjuntos já criados
+// 7. Mostrar todos os conjuntos
 void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
     for(int indice = 0; indice < contador; indice++){
         printf("\nConjunto %d: {", indice);
@@ -303,7 +305,7 @@ void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
     }
 }
 
-// 8. Busca um valor especifíco dentro de toda a matiz criada
+// 8. Busca um valor especifíco
 void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
     int valor = pedir_indice_valores(1, contador,"");
     int referencia = 0;
@@ -326,6 +328,32 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
     }
 }
 
+// 9. Calcula media e o desvio
+void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev[P][N]){
+    int indice = pedir_indice_valores(0, contador, "ver a media e o desvio padrao");
+    float soma = 0.0;
+    float media = 0.0;
+    float desvio_padrao = 0.0;
+
+    for(int j = 0; j < quantidade[indice]; j++){
+        soma += matriz[indice][j];
+    }
+    media = soma/quantidade[indice];
+
+    printf("\nMedia = %.2f", media);
+
+    for(int j = 0; j < quantidade[indice]; j++){
+        desvio_padrao += pow(matriz[indice][j] - media, 2);
+    }
+
+    desvio_padrao = sqrt(desvio_padrao/(quantidade[indice] - 1));
+
+    printf("\nDesvio padrão: %.2f\n", desvio_padrao);
+
+    med_dev[0][indice] = media;
+    med_dev[1][indice] = desvio_padrao;
+}
+
 int main(){
 
     //Compatibilidade dos caracteres especiais
@@ -338,6 +366,7 @@ int main(){
     bool erro = false;
     
     int MATRIZ[M][N] = {{0}};
+    int med_dev[P][N] = {0};
     int quantidade[M] = {0};
     int contador = 0;
     
@@ -416,6 +445,12 @@ int main(){
             case 8:
                 if (existe_conjunto(contador)) {
                     buscar_valores(contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 9:
+                if(existe_conjunto(contador)){
+                    media_desvio(contador, MATRIZ, quantidade, med_dev);
                 }
                 pausar();
                 break;

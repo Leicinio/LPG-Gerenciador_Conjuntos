@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 // Tamanho da Matriz
 #define M 5
 #define N 5
@@ -89,6 +93,19 @@ int pedir_indice_valores(int chave, int contador, char *acao){
     }
 }
 
+//Pode ser utilizado no item 8 no futuro.
+//Retorna -1 se não existe no conjunto, retorna o índice se existe no conjunto.
+int existe_valor(int conjunto[], int valor){
+    int indice = -1;
+    for(int i = 0; i < N; i++){
+        if(conjunto[i] == valor){
+            indice = i;
+            break;
+        }
+    }
+    return indice;
+}
+
 // ---------- Opções do menu ----------
 
 // 1. Cria um novo conjunto para ser usado dentro da matriz
@@ -119,12 +136,143 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
             if(valor == 0){
                 break;
             }
+
+            if(existe_valor(matriz[indice], valor) != -1){
+                printf("\n"VERMELHO "Esse valor já existe nesse conjunto" RESET "\n");
+                j--;
+                continue;
+            }
+
             matriz[indice][j] = valor;
             quantidade[indice]++;
         }
     }else{
         printf("\n"VERMELHO "O Conjunto não suporta mais valores" RESET "\n");
     }
+}
+
+// 3. Remover um conjunto
+void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
+    int indice = pedir_indice_valores(0, *contador, "remover");
+    int conjunto_maximo = *contador - 1;
+
+    for(int i = indice; i < conjunto_maximo; i++){ 
+        for(int j = 0; j < N; j++){
+            matriz[i][j] = matriz[i+1][j];
+        }
+        quantidade[i] = quantidade[i+1];
+    }
+
+
+    for(int i = 0; i < N; i++){
+        matriz[conjunto_maximo][i] = 0;
+    }
+    quantidade[conjunto_maximo] = 0;
+    (*contador)--;
+
+    printf("\n" AMARELO "Conjunto removido! Os conjuntos com indíces maiores foram movidos. Agora existem %d conjunto(s)." RESET "\n", *contador);
+}
+
+// 4. União de Conjuntos
+void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
+    if(*contador < 1){
+        printf("\n" VERMELHO "Você precisa de no mínimo 1 conjunto criado.\n");
+        return;
+    }
+    if(*contador >= M){
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        return;
+    }
+
+    int indice = pedir_indice_valores(0, *contador, "unir primeiro");
+    int indice2 = pedir_indice_valores(0, *contador, "unir segundo");
+
+    int i = 0;
+    for(int j = 0; j < N; j++){
+        int valor = matriz[indice][j];
+
+        if(i >= N || valor == 0){
+            break;
+        }
+
+        matriz[*contador][i] = valor;
+        quantidade[*contador]++;
+        i++;
+    }
+    for(int j = 0; j < N; j++){
+        int valor = matriz[indice2][j];
+
+        if(i >= N || valor == 0){
+            break;
+        }
+        
+        int repetido = -1;
+        for(int k = 0; k < N; k++){
+            if(matriz[indice][k] == 0){
+                break;
+            }
+
+            if(matriz[indice][k] == valor){
+                repetido = 1;
+                break;
+            }
+
+        }
+
+        if(repetido == 1){
+            continue;
+        }
+
+        matriz[*contador][i] = valor;
+        quantidade[*contador]++;
+        i++;
+    }
+
+    (*contador)++;
+    printf("\n" VERDE "O conjunto união foi criado no índice %d.\n", (*contador - 1));
+
+
+}
+
+
+// 5. Interseção de conjuntos
+void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
+    if(*contador < 1){
+        printf("\n" VERMELHO "Você precisa de no mínimo 1 conjunto criado.\n");
+        return;
+    }
+    if(*contador >= M){
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        return;
+    }
+
+    int indice = pedir_indice_valores(0, *contador, "unir primeiro");
+    int indice2 = pedir_indice_valores(0, *contador, "unir segundo");
+
+    int k = 0;
+
+    for(int i = 0; i < N; i++){
+        int valor1 = matriz[indice][i];
+        if(valor1 == 0 && k >= N){
+            break;
+        }
+
+        for(int j = 0; j < N; j++){
+            int valor2 = matriz[indice2][j];
+            if(valor2 == 0){
+                break;
+            }
+
+            if(valor1 == valor2){
+                matriz[*contador][k] = valor1;
+                quantidade[*contador]++;
+                k++;
+            }
+        }
+    }
+
+    (*contador)++;
+    printf("\n" VERDE "O conjunto interseção foi criado no índice %d.\n", (*contador - 1));
 }
 
 // 6. Mostrar o conjunto escolhido pelo usuário
@@ -179,6 +327,12 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
 }
 
 int main(){
+
+    //Compatibilidade dos caracteres especiais
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+    #endif
+
     // Menu
     int opcao; 
     bool erro = false;
@@ -226,6 +380,24 @@ int main(){
             case 2:
                 if(existe_conjunto(contador)){
                     inserir_valores(contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 3:
+                if(existe_conjunto(contador)){
+                    remover_conjunto(&contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 4:
+                if(existe_conjunto(contador)){
+                    uniao_conjuntos(&contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 5:
+                if(existe_conjunto(contador)){
+                    intersecao_conjuntos(&contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

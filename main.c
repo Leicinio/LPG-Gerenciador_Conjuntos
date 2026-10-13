@@ -173,6 +173,67 @@ void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
     printf("\n" AMARELO "Conjunto removido! Os conjuntos com indíces maiores foram movidos. Agora existem %d conjunto(s)." RESET "\n", *contador);
 }
 
+// 4. União de Conjuntos
+void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
+    if(*contador < 2){
+        printf("\n" VERMELHO "Você precisa de no mínimo 2 conjuntos criados.\n");
+        return;
+    }
+    if(*contador >= M){
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        return;
+    }
+
+    int indice = pedir_indice_valores(0, *contador, "unir primeiro");
+    int indice2 = pedir_indice_valores(0, *contador, "unir segundo");
+
+    int i = 0;
+    for(int j = 0; j < N; j++){
+        int valor = matriz[indice][j];
+
+        if(i >= N || valor == 0){
+            break;
+        }
+
+        matriz[*contador][i] = valor;
+        quantidade[*contador]++;
+        i++;
+    }
+    for(int j = 0; j < N; j++){
+        int valor = matriz[indice2][j];
+
+        if(i >= N || valor == 0){
+            break;
+        }
+        
+        int repetido = -1;
+        for(int k = 0; k < N; k++){
+            if(matriz[indice][k] == 0){
+                break;
+            }
+
+            if(matriz[indice][k] == valor){
+                repetido = 1;
+                break;
+            }
+
+        }
+
+        if(repetido == 1){
+            continue;
+        }
+
+        matriz[*contador][i] = valor;
+        quantidade[*contador]++;
+        i++;
+    }
+
+    (*contador)++;
+    printf("\n" VERDE "O conjunto união foi criado no índice %d.\n", (*contador - 1));
+
+
+}
+
 // 6. Mostrar o conjunto escolhido pelo usuário
 void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
     int indice = pedir_indice_valores(0, contador, "mostrar");
@@ -284,6 +345,12 @@ int main(){
             case 3:
                 if(existe_conjunto(contador)){
                     remover_conjunto(&contador, MATRIZ, quantidade);
+                }
+                pausar();
+                break;
+            case 4:
+                if(existe_conjunto(contador)){
+                    uniao_conjuntos(&contador, MATRIZ, quantidade);
                 }
                 pausar();
                 break;

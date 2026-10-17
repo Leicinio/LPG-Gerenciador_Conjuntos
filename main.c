@@ -331,27 +331,32 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
 // 9. Calcula media e o desvio
 void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev[P][N]){
     int indice = pedir_indice_valores(0, contador, "ver a media e o desvio padrao");
-    float soma = 0.0;
-    float media = 0.0;
-    float desvio_padrao = 0.0;
-
-    for(int j = 0; j < quantidade[indice]; j++){
-        soma += matriz[indice][j];
+    if(quantidade[indice] >= 2){
+        float soma = 0.0;
+        float media = 0.0;
+        float desvio_padrao = 0.0;
+    
+        for(int j = 0; j < quantidade[indice]; j++){
+            soma += matriz[indice][j];
+        }
+        media = soma/quantidade[indice];
+    
+        printf("\nMedia = %.2f", media);
+    
+        for(int j = 0; j < quantidade[indice]; j++){
+            desvio_padrao += pow(matriz[indice][j] - media, 2);
+        }
+    
+        desvio_padrao = sqrt(desvio_padrao/(quantidade[indice] - 1));
+    
+        printf("\nDesvio padrão: %.2f\n", desvio_padrao);
+    
+        med_dev[0][indice] = media;
+        med_dev[1][indice] = desvio_padrao;
+    
+    }else{
+        printf(AMARELO "\nDesculpa, mas o conjunto escolhido precisa de 2 ou mais elementos" RESET);
     }
-    media = soma/quantidade[indice];
-
-    printf("\nMedia = %.2f", media);
-
-    for(int j = 0; j < quantidade[indice]; j++){
-        desvio_padrao += pow(matriz[indice][j] - media, 2);
-    }
-
-    desvio_padrao = sqrt(desvio_padrao/(quantidade[indice] - 1));
-
-    printf("\nDesvio padrão: %.2f\n", desvio_padrao);
-
-    med_dev[0][indice] = media;
-    med_dev[1][indice] = desvio_padrao;
 }
 
 int main(){

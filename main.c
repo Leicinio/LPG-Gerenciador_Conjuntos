@@ -371,7 +371,7 @@ int main(){
     bool erro = false;
     
     int MATRIZ[M][N] = {{0}};
-    int med_dev[P][N] = {0};
+    int med_dev[P][N] = {{0}};
     int quantidade[M] = {0};
     int contador = 0;
     

@@ -19,27 +19,9 @@
 #define VERDE    "\033[92m"
 #define AMARELO  "\033[93m"
 #define AZUL     "\033[94m"
-#define MAGENTA  "\033[95m"
-#define CIANO    "\033[96m"
-#define BRANCO   "\033[97m"
 
 // Cores em Negrito
-#define NEGRITO_VERMELHO "\033[1;91m"
-#define NEGRITO_VERDE    "\033[1;92m"
-#define NEGRITO_AMARELO  "\033[1;93m"
-#define NEGRITO_AZUL     "\033[1;94m"
-#define NEGRITO_MAGENTA  "\033[1;95m"
-#define NEGRITO_CIANO    "\033[1;96m"
 #define NEGRITO_BRANCO   "\033[1;97m"
-
-// Cores de Fundo
-#define FUNDO_VERMELHO "\033[7;91m"
-#define FUNDO_VERDE    "\033[7;92m"
-#define FUNDO_AMARELO  "\033[7;93m"
-#define FUNDO_AZUL     "\033[7;94m"
-#define FUNDO_MAGENTA  "\033[7;95m"
-#define FUNDO_CIANO    "\033[7;96m"
-#define FUNDO_BRANCO   "\033[7;97m"
 
 // ---------- Utilitários ----------
 
@@ -109,13 +91,18 @@ int existe_valor(int conjunto[], int valor){
 
 int pode_unir(int conj1[N], int conj2[N], int somaQtd){
     for(int i = 0; i < N; i++){
+        if(conj1[i] == 0){
+            break;
+        }
         for(int j = 0; j < N; j++){
+            if(conj2[j] == 0){
+                break;
+            }
             if(conj2[j] == conj1[i]){
                 somaQtd--;
             }
         }
     }
-    printf("AAAA %d", somaQtd);
     if(somaQtd <= N){
         return 1;
     }else{
@@ -202,7 +189,7 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
 
     int somaQtd = quantidade[indice] + quantidade[indice2];
     if(pode_unir(matriz[indice], matriz[indice2], somaQtd) == 0){
-        printf("\n" VERMELHO "O limite de conjuntos já foi atingido." RESET "\n");
+        printf("\n" VERMELHO "A união ultrapassa os limites do conjunto. Nenhum conjunto foi criado." RESET "\n");
         return;
     }
 

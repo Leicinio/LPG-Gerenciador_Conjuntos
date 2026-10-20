@@ -7,9 +7,9 @@
 #endif
 
 // Tamanho da Matriz
-#define M 8 // Conjuntos 
-#define N 10 // Elementos
-#define P 2 
+#define M 8  // Conjuntos 
+#define N 10 // Elementos por conjunto
+#define P 2  // Linhas para média (0) e desvio padrão (1)
 
 // Redefinir todas as formatações de texto
 #define RESET    "\033[0m"
@@ -40,14 +40,13 @@ int existe_conjunto(int contador){
         printf(VERMELHO "\nVocê precisa criar um novo conjunto!" RESET "\n");
         return false;
     }
-
     return true;
 }
 
 int pedir_indice(int contador, char *acao){
     int indice = -1;
     do{
-        printf("\nQual conjunto deseja %s(0 - %d): ", acao, contador - 1);
+        printf("\nQual conjunto deseja %s (0 - %d): ", acao, contador - 1);
         if(scanf("%d", &indice) != 1){
             indice = -1;
         }
@@ -55,12 +54,10 @@ int pedir_indice(int contador, char *acao){
         if(indice < 0 || indice >= contador){
             printf(VERMELHO "Índice inválido!" RESET "\n");
         }
-
     }while(indice < 0 || indice >= contador);
 
     return indice;
 }
-
 
 int pedir_valores(int contador){
     int valor = 0;
@@ -77,7 +74,7 @@ int pedir_valores(int contador){
     return valor;
 }
 
-//Retorna -1 se não existe no conjunto, retorna o índice se existe no conjunto.
+// Retorna -1 se não existe no conjunto, retorna o índice se existe no conjunto.
 int existe_valor(int conjunto[], int valor){
     int indice = -1;
     for(int i = 0; i < N; i++){
@@ -142,7 +139,7 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
             }
 
             if(existe_valor(matriz[indice], valor) != -1){
-                printf("\n"VERMELHO "Esse valor já existe nesse conjunto" RESET "\n");
+                printf("\n" VERMELHO "Esse valor já existe nesse conjunto" RESET "\n");
                 j--;
                 continue;
             }
@@ -151,12 +148,12 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
             quantidade[indice]++;
         }
     }else{
-        printf("\n"VERMELHO "O Conjunto não suporta mais valores" RESET "\n");
+        printf("\n" VERMELHO "O Conjunto não suporta mais valores" RESET "\n");
     }
 }
 
-// 3. Remover um conjunto
-void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
+// 3. Remover um conjunto (Atualizado para mover também a matriz med_dev)
+void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M], float med_dev[P][M]){
     int indice = pedir_indice(*contador, "remover");
     int conjunto_maximo = *contador - 1;
 
@@ -165,16 +162,19 @@ void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
             matriz[i][j] = matriz[i+1][j];
         }
         quantidade[i] = quantidade[i+1];
+        med_dev[0][i] = med_dev[0][i+1];
+        med_dev[1][i] = med_dev[1][i+1];
     }
-
 
     for(int i = 0; i < N; i++){
         matriz[conjunto_maximo][i] = 0;
     }
     quantidade[conjunto_maximo] = 0;
+    med_dev[0][conjunto_maximo] = 0.0f;
+    med_dev[1][conjunto_maximo] = 0.0f;
     (*contador)--;
 
-    printf("\n" AMARELO "Conjunto removido! Os conjuntos com indíces maiores foram movidos. Agora existem %d conjunto(s)." RESET "\n", *contador);
+    printf("\n" AMARELO "Conjunto removido! Os conjuntos com índices maiores foram movidos. Agora existem %d conjunto(s)." RESET "\n", *contador);
 }
 
 // 4. União de Conjuntos
@@ -193,6 +193,8 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
         return;
     }
 
+    quantidade[*contador] = 0;
+
     int i = 0;
     for(int j = 0; j < N; j++){
         int valor = matriz[indice][j];
@@ -205,6 +207,7 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
         quantidade[*contador]++;
         i++;
     }
+    
     for(int j = 0; j < N; j++){
         int valor = matriz[indice2][j];
 
@@ -222,7 +225,6 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
                 repetido = 1;
                 break;
             }
-
         }
 
         if(repetido == 1){
@@ -236,10 +238,7 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
 
     (*contador)++;
     printf("\n" VERDE "O conjunto união foi criado no índice %d.\n", (*contador - 1));
-
-
 }
-
 
 // 5. Interseção de conjuntos
 void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
@@ -251,11 +250,14 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     int indice = pedir_indice(*contador, "fazer a interseção (1)");
     int indice2 = pedir_indice(*contador, "fazer a interseção (2)");
 
+    
+    quantidade[*contador] = 0;
     int k = 0;
 
     for(int i = 0; i < N; i++){
         int valor1 = matriz[indice][i];
-        if(valor1 == 0 && k >= N){
+        
+        if(valor1 == 0){
             break;
         }
 
@@ -266,9 +268,11 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
             }
 
             if(valor1 == valor2){
-                matriz[*contador][k] = valor1;
-                quantidade[*contador]++;
-                k++;
+                if(k < N){
+                    matriz[*contador][k] = valor1;
+                    quantidade[*contador]++;
+                    k++;
+                }
             }
         }
     }
@@ -305,7 +309,7 @@ void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
     }
 }
 
-// 8. Busca um valor especifíco
+// 8. Busca um valor específico
 void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
     int valor = pedir_valores(contador);
     int referencia = 0;
@@ -321,8 +325,8 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
     }
 }
 
-// 9. Calcula media e o desvio
-void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev[P][N]){
+// 9. Calcula média e o desvio padrão
+void media_desvio(int contador, int matriz[M][N], int quantidade[M], float med_dev[P][M]){
     int indice = pedir_indice(contador, "ver a media e o desvio padrao");
     if(quantidade[indice] >= 2){
         float soma = 0.0;
@@ -332,15 +336,15 @@ void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev
         for(int j = 0; j < quantidade[indice]; j++){
             soma += matriz[indice][j];
         }
-        media = soma/quantidade[indice];
+        media = soma / quantidade[indice];
     
-        printf("\nMedia = %.2f", media);
+        printf("\nMédia = %.2f", media);
     
         for(int j = 0; j < quantidade[indice]; j++){
             desvio_padrao += pow(matriz[indice][j] - media, 2);
         }
     
-        desvio_padrao = sqrt(desvio_padrao/(quantidade[indice] - 1));
+        desvio_padrao = sqrt(desvio_padrao / (quantidade[indice] - 1));
     
         printf("\nDesvio padrão: %.2f\n", desvio_padrao);
     
@@ -352,19 +356,17 @@ void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev
     }
 }
 
-void main(){
-
-    //Compatibilidade dos caracteres especiais
+int main(){
+    // Compatibilidade dos caracteres especiais
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
     #endif
 
-    // Menu
     int opcao; 
     bool erro = false;
     
     int MATRIZ[M][N] = {{0}};
-    int med_dev[P][N] = {{0}};
+    float med_dev[P][M] = {{0.0f}};
     int quantidade[M] = {0};
     int contador = 0;
     
@@ -373,7 +375,7 @@ void main(){
 
         printf("\n\n");
         printf("╔══════════════════════════════════════════════════╗\n");
-        printf("║" NEGRITO_BRANCO "              GERENCIADOR DE CONJUNTOS            ║" RESET "\n");
+        printf("║" NEGRITO_BRANCO "             GERENCIADOR DE CONJUNTOS            ║" RESET "\n");
         printf("╠══════════════════════════════════════════════════╣\n");
         printf("║  1. Criar um novo conjunto vazio                 ║\n");
         printf("║  2. Inserir dados em um conjunto                 ║\n");
@@ -386,8 +388,9 @@ void main(){
         printf("║  9. Calcular a média e o desvio padrão           ║\n");
         printf("║ 10. Sair do programa                             ║\n");
         printf("╚══════════════════════════════════════════════════╝\n");
+        
         if(erro){
-            printf("\n"VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
+            printf("\n" VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
             erro = false;
         }
 
@@ -411,7 +414,7 @@ void main(){
                 break;
             case 3:
                 if(existe_conjunto(contador)){
-                    remover_conjunto(&contador, MATRIZ, quantidade);
+                    remover_conjunto(&contador, MATRIZ, quantidade, med_dev);
                 }
                 pausar();
                 break;
@@ -453,7 +456,7 @@ void main(){
                 break;
             case 10:
                 printf("\n" NEGRITO_BRANCO "Obrigado por usar o sistema! Volte sempre." RESET "\n");
-                return;
+                return 0;
             default:
                 erro = true;
                 break;

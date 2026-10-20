@@ -62,40 +62,38 @@ int existe_conjunto(int contador){
     return true;
 }
 
-// 2-3-4-5-6-8
-int pedir_indice_valores(int chave, int contador, char *acao){
-    if(chave == 0){
-        int indice = -1;
-        do{
-            printf("\nQual conjunto deseja %s(0 - %d): ", acao, contador - 1);
-            if(scanf("%d", &indice) != 1){
-                indice = -1;
-            }
-            limpar_buffer();
-            if(indice < 0 || indice >= contador){
-                printf(VERMELHO "Índice inválido!" RESET "\n");
-            }
+int pedir_indice(int contador, char *acao){
+    int indice = -1;
+    do{
+        printf("\nQual conjunto deseja %s(0 - %d): ", acao, contador - 1);
+        if(scanf("%d", &indice) != 1){
+            indice = -1;
+        }
+        limpar_buffer();
+        if(indice < 0 || indice >= contador){
+            printf(VERMELHO "Índice inválido!" RESET "\n");
+        }
 
-        }while(indice < 0 || indice >= contador);
+    }while(indice < 0 || indice >= contador);
 
-        return indice;
-    }else{
-        int valor = 0;
-        int leu_corretamente = 0;
-        do{
-            printf("\nQual valor deseja buscar dentro dos conjuntos: ", acao);
-            leu_corretamente = scanf("%d", &valor);
-            limpar_buffer();
-            if (leu_corretamente != 1) {
-                printf(VERMELHO "Valor inválido! Digite um número." RESET "\n");
-            }
-        }while(leu_corretamente != 1);
-        
-        return valor;
-    }
+    return indice;
 }
 
-//Pode ser utilizado no item 8 no futuro.
+int pedir_valores(int contador){
+    int valor = 0;
+    int leu_corretamente = 0;
+    do{
+        printf("\nQual valor deseja buscar dentro dos conjuntos: ");
+        leu_corretamente = scanf("%d", &valor);
+        limpar_buffer();
+        if (leu_corretamente != 1) {
+            printf(VERMELHO "Valor inválido! Digite um número." RESET "\n");
+        }
+    }while(leu_corretamente != 1);
+        
+    return valor;
+}
+
 //Retorna -1 se não existe no conjunto, retorna o índice se existe no conjunto.
 int existe_valor(int conjunto[], int valor){
     int indice = -1;
@@ -122,7 +120,7 @@ void criar_conjunto(int *contador){
 
 // 2. Inserir valores 
 void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
-    int indice = pedir_indice_valores(0, contador, "inserir valores");
+    int indice = pedir_indice(contador, "inserir valores");
     int valor;
 
     if(quantidade[indice] != N){
@@ -155,7 +153,7 @@ void inserir_valores(int contador, int matriz[M][N], int quantidade[M]){
 
 // 3. Remover um conjunto
 void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
-    int indice = pedir_indice_valores(0, *contador, "remover");
+    int indice = pedir_indice(*contador, "remover");
     int conjunto_maximo = *contador - 1;
 
     for(int i = indice; i < conjunto_maximo; i++){ 
@@ -182,8 +180,8 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
         return;
     }
 
-    int indice = pedir_indice_valores(0, *contador, "unir (1)");
-    int indice2 = pedir_indice_valores(0, *contador, "unir (2)");
+    int indice = pedir_indice(*contador, "unir (1)");
+    int indice2 = pedir_indice(*contador, "unir (2)");
 
     int i = 0;
     for(int j = 0; j < N; j++){
@@ -240,8 +238,8 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
         return;
     }
 
-    int indice = pedir_indice_valores(0, *contador, "fazer a interseção (1)");
-    int indice2 = pedir_indice_valores(0, *contador, "fazer a interseção (2)");
+    int indice = pedir_indice(*contador, "fazer a interseção (1)");
+    int indice2 = pedir_indice(*contador, "fazer a interseção (2)");
 
     int k = 0;
 
@@ -271,7 +269,7 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
 
 // 6. Mostrar um conjunto 
 void mostrar_conjunto(int contador, int matriz[M][N], int quantidade[M]){
-    int indice = pedir_indice_valores(0, contador, "mostrar");
+    int indice = pedir_indice(contador, "mostrar");
 
     printf("\nConjunto %d: {", indice);
     for(int j = 0; j < quantidade[indice]; j++){
@@ -299,30 +297,23 @@ void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
 
 // 8. Busca um valor especifíco
 void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
-    int valor = pedir_indice_valores(1, contador,"");
+    int valor = pedir_valores(contador);
     int referencia = 0;
-    for(int indice = 0; indice < contador; indice++){
-        bool encontrado = false;
-        for(int j = 0; j < quantidade[indice]; j++){
-            if(valor == matriz[indice][j]){
-                encontrado = true;
-                referencia++;
-                break;
-            }
-        }
-
-        if(encontrado){
-            printf("\nConjunto %d\n", indice);
+    for(int i = 0; i < M; i++){
+        if(existe_valor(matriz[i], valor) != -1){
+            printf("Conjunto %d\n", i);
+            referencia++;
         }
     }
+    
     if(referencia == 0){
-        printf("\n" VERMELHO "Desculpa, não existe nenhum conjunto com esse valor\n");
+        printf("\n" VERMELHO "Desculpa, não existe nenhum conjunto com esse valor" RESET "\n");
     }
 }
 
 // 9. Calcula media e o desvio
 void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev[P][N]){
-    int indice = pedir_indice_valores(0, contador, "ver a media e o desvio padrao");
+    int indice = pedir_indice(contador, "ver a media e o desvio padrao");
     if(quantidade[indice] >= 2){
         float soma = 0.0;
         float media = 0.0;
@@ -385,7 +376,6 @@ int main(){
         printf("║  9. Calcular a média e o desvio padrão           ║\n");
         printf("║ 10. Sair do programa                             ║\n");
         printf("╚══════════════════════════════════════════════════╝\n");
-
         if(erro){
             printf("\n"VERMELHO "Ops! Essa opção não está no menu, tente novamente." RESET "\n");
             erro = false;

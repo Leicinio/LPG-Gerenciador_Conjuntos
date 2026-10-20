@@ -79,6 +79,7 @@ int pedir_indice(int contador, char *acao){
     return indice;
 }
 
+
 int pedir_valores(int contador){
     int valor = 0;
     int leu_corretamente = 0;
@@ -104,6 +105,22 @@ int existe_valor(int conjunto[], int valor){
         }
     }
     return indice;
+}
+
+int pode_unir(int conj1[N], int conj2[N], int somaQtd){
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++){
+            if(conj2[j] == conj1[i]){
+                somaQtd--;
+            }
+        }
+    }
+    printf("AAAA %d", somaQtd);
+    if(somaQtd <= N){
+        return 1;
+    }else{
+        return 0;
+    }
 }
 
 // ---------- Opções do menu ----------
@@ -176,12 +193,18 @@ void remover_conjunto(int *contador, int matriz[M][N], int quantidade[M]){
 // 4. União de Conjuntos
 void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     if(*contador >= M){
-        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido." RESET "\n");
         return;
     }
 
     int indice = pedir_indice(*contador, "unir (1)");
     int indice2 = pedir_indice(*contador, "unir (2)");
+
+    int somaQtd = quantidade[indice] + quantidade[indice2];
+    if(pode_unir(matriz[indice], matriz[indice2], somaQtd) == 0){
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido." RESET "\n");
+        return;
+    }
 
     int i = 0;
     for(int j = 0; j < N; j++){
@@ -305,7 +328,7 @@ void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
             referencia++;
         }
     }
-    
+
     if(referencia == 0){
         printf("\n" VERMELHO "Desculpa, não existe nenhum conjunto com esse valor" RESET "\n");
     }
@@ -338,11 +361,11 @@ void media_desvio(int contador, int matriz[M][N], int quantidade[M], int med_dev
         med_dev[1][indice] = desvio_padrao;
     
     }else{
-        printf(AMARELO "\nDesculpa, mas o conjunto escolhido precisa de 2 ou mais elementos" RESET);
+        printf(AMARELO "\nDesculpa, mas o conjunto escolhido precisa de 2 ou mais elementos\n" RESET);
     }
 }
 
-int main(){
+void main(){
 
     //Compatibilidade dos caracteres especiais
     #ifdef _WIN32
@@ -443,13 +466,11 @@ int main(){
                 break;
             case 10:
                 printf("\n" NEGRITO_BRANCO "Obrigado por usar o sistema! Volte sempre." RESET "\n");
-                return 0;
+                return;
             default:
                 erro = true;
                 break;
         }
 
     }while(true);
-
-    return 0;
 }

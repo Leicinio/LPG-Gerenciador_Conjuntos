@@ -237,13 +237,13 @@ void uniao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     }
 
     (*contador)++;
-    printf("\n" VERDE "O conjunto união foi criado no índice %d.\n", (*contador - 1));
+    printf("\n" VERDE "O conjunto união foi criado no índice %d. " RESET "\n", (*contador - 1));
 }
 
 // 5. Interseção de conjuntos
 void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     if(*contador >= M){
-        printf("\n" VERMELHO "O limite de conjuntos já foi atingido.\n");
+        printf("\n" VERMELHO "O limite de conjuntos já foi atingido. " RESET "\n");
         return;
     }
 
@@ -278,7 +278,7 @@ void intersecao_conjuntos(int *contador, int matriz[M][N], int quantidade[M]){
     }
 
     (*contador)++;
-    printf("\n" VERDE "O conjunto interseção foi criado no índice %d.\n", (*contador - 1));
+    printf("\n" VERDE "O conjunto interseção foi criado no índice %d." RESET "\n", (*contador - 1));
 }
 
 // 6. Mostrar um conjunto 
@@ -313,7 +313,7 @@ void mostrar_todos_conjuntos(int contador, int matriz[M][N], int quantidade[M]){
 void buscar_valores(int contador, int matriz[M][N], int quantidade[M]){
     int valor = pedir_valores(contador);
     int referencia = 0;
-    for(int i = 0; i < M; i++){
+    for(int i = 0; i < contador; i++){
         if(existe_valor(matriz[i], valor) != -1){
             printf("Conjunto %d\n", i);
             referencia++;
@@ -375,7 +375,7 @@ int main(){
 
         printf("\n\n");
         printf("╔══════════════════════════════════════════════════╗\n");
-        printf("║" NEGRITO_BRANCO "             GERENCIADOR DE CONJUNTOS            ║" RESET "\n");
+        printf("║" NEGRITO_BRANCO "             GERENCIADOR DE CONJUNTOS             ║" RESET "\n");
         printf("╠══════════════════════════════════════════════════╣\n");
         printf("║  1. Criar um novo conjunto vazio                 ║\n");
         printf("║  2. Inserir dados em um conjunto                 ║\n");
